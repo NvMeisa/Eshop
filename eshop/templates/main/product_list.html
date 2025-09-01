@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Каталог товаров{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="my-4">
+      {% if category %}
+        {{ category.name }}
+      {% else %}
+        Все товары
+      {% endif %}
+
+    </h1>
+
+    <div class="row">
+      <!-- Список категорий (боковая панель) -->
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="{% url 'main:product_list' %}"
+             class="list-group-item list-group-item-action {% if not category %}active{% endif %}">Все категории</a>
+          {% for cat in categories %}
+            <a href="{{ cat.get_absolute_url }}"
+               class="list-group-item list-group-item-action {% if cat == category %}active{% endif %}">
+              {{ cat.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Список товаров -->
+      <div class="col-md-9">
+        <div class="row">
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100">
+                <a href="{{ product.get_absolute_url }}">
+                  {% if product.image %}
+                    <img class="card-img-top"
+                         src="{{ product.image.url }}"
+                         alt="{{ product.name }}" />
+                  {% else %}
+                    <div class="card-img-top image-placeholder">
+                      <i class="fas fa-image"></i>
+                    </div>
+                  {% endif %}
+                </a>
+
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                  </h4>
+                  <h5>{{ product.price }} руб.</h5>
+                  <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                </div>
+                <div class="card-footer">
+                  {% if product.available %}
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-success">В наличии</small>
+                      <button class="btn btn-primary btn-sm" onclick="addToCart({{ product.id }})">
+                        <i class="fas fa-shopping-cart me-1"></i>В корзину
+                      </button>
+                    </div>
+                  {% else %}
+                    <small class="text-danger">Нет в наличии</small>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-12">
+              <p>Товары не найдены.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  function addToCart(productId) {
+    fetch(`/cart/add/${productId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quantity: 1
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        // Обновляем счетчик корзины в навигации
+        updateCartCounter(data.cart_total);
+      } else {
+        alert('Ошибка: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Произошла ошибка при добавлении в корзину');
+    });
+  }
+  
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  
+  function updateCartCounter(total) {
+    // Здесь можно обновить счетчик корзины в навигации
+    console.log('Корзина обновлена, всего товаров:', total);
+  }
+  </script>
+{% endblock %}

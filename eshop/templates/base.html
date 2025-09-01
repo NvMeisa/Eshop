@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}Магазин{% endblock %}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'main:index' %}">
+          <i class="fas fa-store me-2"></i>Магазин
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'main:index' %}">
+                <i class="fas fa-home me-1"></i>Главная
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'main:product_list' %}">
+                <i class="fas fa-shopping-bag me-1"></i>Товары
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'main:cart' %}">
+                <i class="fas fa-shopping-cart me-1"></i>Корзина
+                <span id="cart-counter" class="badge bg-danger ms-1" style="display: none;">0</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-user me-1"></i>Войти
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Основное содержимое -->
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Подвал -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>
+              <i class="fas fa-store me-2"></i>О магазине
+            </h5>
+            <p class="small">Качественные товары по доступным ценам</p>
+          </div>
+          <div class="col-md-4">
+            <h5>
+              <i class="fas fa-phone me-2"></i>Контакты
+            </h5>
+            <p class="small">
+              +7 (999) 123-45-67
+              <br>
+              info@shop.ru
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h5>
+              <i class="fas fa-clock me-2"></i>Режим работы
+            </h5>
+            <p class="small">
+              Пн-Пт: 9:00-18:00
+              <br>
+              Сб-Вс: 10:00-16:00
+            </p>
+          </div>
+        </div>
+        <hr class="my-3">
+        <p class="mb-0">&copy; {% now "Y" %} Магазин. Все права защищены.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript для корзины -->
+    <script>
+    // Функция для обновления счетчика корзины
+    function updateCartCounter(total) {
+      const counter = document.getElementById('cart-counter');
+      if (counter) {
+        if (total > 0) {
+          counter.textContent = total;
+          counter.style.display = 'inline';
+        } else {
+          counter.style.display = 'none';
+        }
+      }
+    }
+    
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    
+    // Загружаем количество товаров в корзине при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+      // Здесь можно добавить AJAX запрос для получения количества товаров в корзине
+      // Пока оставляем пустым
+    });
+    </script>
+    
+    <!-- Дополнительные стили для заглушек изображений -->
+    <style>
+      .image-placeholder {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        transition: all 0.3s ease;
+      }
+      
+      .image-placeholder:hover {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        transform: scale(1.02);
+      }
+      
+      .card-img-top.image-placeholder {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+      }
+    </style>
+  </body>
+</html>

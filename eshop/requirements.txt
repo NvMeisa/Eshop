@@ -1,0 +1,43 @@
+# Основные зависимости Django
+Django>=5.2.3
+Pillow>=11.2.1
+
+# Django REST Framework
+djangorestframework>=3.16.1
+django-filter>=25.1
+drf-spectacular>=0.27.0
+
+# Оптимизация и производительность
+django-debug-toolbar>=4.2.0
+django-extensions>=3.2.3
+django-cors-headers>=4.3.1
+
+# Кэширование (опционально)
+django-redis>=5.4.0
+redis>=5.0.1
+
+# База данных (опционально)
+psycopg2-binary>=2.9.7
+
+# Мониторинг и логирование
+django-prometheus>=2.3.1
+
+# Оптимизация изображений
+Pillow>=11.2.1
+
+# Утилиты разработки
+python-decouple>=3.8
+whitenoise>=6.6.0
+
+# Тестирование
+pytest>=7.4.3
+pytest-django>=4.7.0
+factory-boy>=3.3.0
+
+# Форматирование кода
+black>=23.11.0
+isort>=5.12.0
+flake8>=6.1.0
+
+# Линтинг
+djlint>=1.36.4
